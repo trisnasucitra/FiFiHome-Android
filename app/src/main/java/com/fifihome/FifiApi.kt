@@ -1,5 +1,5 @@
 package id.fifihome.android
-
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
@@ -25,9 +25,8 @@ class FifiApi(private val baseUrl: String = "http://192.168.0.50/FiFiHome/") {
         val req = Request.Builder().url(baseUrl + "index.php").post(form.toRequestBody("application/x-www-form-urlencoded".toMediaType())).build()
         val body = client.newCall(req).execute().use { it.body?.string().orEmpty() }
         if (body.contains("password", true) && (body.contains("salah", true) || body.contains("gagal", true) || body.contains("invalid", true))) error("Nama pengguna atau kata sandi tidak sesuai")
-        if (cookies.loadForRequest(HttpUrl.get(baseUrl)).isEmpty()) error("Sesi login tidak terdeteksi. Periksa respons index.php dan konfigurasi server.")
+        if (cookies.loadForRequest(baseUrl.toHttpUrl()).isEmpty()) error("Sesi login tidak terdeteksi. Periksa respons index.php dan konfigurasi server.")
     }
-
     fun getJson(path: String): JSONObject {
         val req = Request.Builder().url(baseUrl + path).get().build()
         val text = client.newCall(req).execute().use { it.body?.string().orEmpty() }
