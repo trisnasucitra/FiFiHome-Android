@@ -1,0 +1,16 @@
+Tambahkan blok ini di dalam `if ($method === 'GET') { ... }` pada api.php,
+setelah deklarasi `$action` dan sebelum blok `event_record` atau sebelum pemrosesan `zone`:
+
+    // Waktu resmi dari komputer server (bukan jam Android)
+    if ($action === 'server_time') {
+        echo json_encode([
+            'status' => 'success',
+            'time' => date('Y-m-d H:i:s'),
+            'timezone' => date_default_timezone_get(),
+            'timestamp' => time()
+        ]);
+        exit;
+    }
+
+Pastikan zona waktu PHP/server sudah diatur sesuai lokasi operasional FiFiHome.
+Jangan mengubah koneksi database atau menaruh kredensial ke repository GitHub.
